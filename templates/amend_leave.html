@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Amend Leave Request {{ leave.id }}{% endblock %}
+{% block content %}
+    <h1>Amend Leave Request (ID: {{ leave.id }})</h1>
+    <p><strong>Current Status:</strong> {{ leave.status }}</p>
+    {% if leave.status != 'Pending' %}
+        <p style="color: orange;">Note: This leave request has already been {{ leave.status }}. Amendments are typically only allowed for pending requests.</p>
+    {% endif %}
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.start_date.label }}
+            {{ form.start_date(value=leave.start_date.strftime('%Y-%m-%d')) }} {# Pre-fill with current value #}
+            {% if form.start_date.errors %}
+                {% for error in form.start_date.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.end_date.label }}
+            {{ form.end_date(value=leave.end_date.strftime('%Y-%m-%d')) }} {# Pre-fill with current value #}
+            {% if form.end_date.errors %}
+                {% for error in form.end_date.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.leave_type.label }}
+            {{ form.leave_type(value=leave.leave_type) }} {# Pre-fill with current value #}
+            {% if form.leave_type.errors %}
+                {% for error in form.leave_type.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.reason.label }}
+            {{ form.reason() }} {# Pre-fill is handled by obj=leave in route #}
+            {% if form.reason.errors %}
+                {% for error in form.reason.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.submit() }}
+        </div>
+    </form>
+    <p><a href="{{ url_for('employee_dashboard') }}">Back to Dashboard</a></p>
+{% endblock %}
